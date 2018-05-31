@@ -1,0 +1,31 @@
+#?
+let Compiler impl application{
+    import spiral::compiler::application;
+    import spiral::compiler::types::{id, str};
+    import core::fs::folder;
+
+    ///package is an abstraction
+    let package impl resource{
+        let name impl str#0
+        when environment is Local{
+           //if the compiler is running in a local environment the
+           //package gain a location
+           let location impl folder#0
+        }
+    } impl plural(packages)#0
+
+
+    resource module modules#1
+    resource application applications#0
+    graph<Acyclic, Directed> DependencyGraph{
+        let package_dependency impl edge<ManyToMany>{
+            backward_reference dependence plural(dependencies)#0
+            forward_reference  import_by plural(import_by_set)#0
+            source package#0
+            target package#1
+        }#0
+    }#0
+
+
+}#1
+

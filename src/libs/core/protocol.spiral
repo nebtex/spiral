@@ -1,0 +1,654 @@
+#01CDDVQ5GY3YJ3P8910QTRQWX2;
+
+protocol Resource#0;
+state Protocol#1;
+protocol Block#2;
+protocol Plural#3;
+proto Enumeration#3;
+
+proto View<Any>{
+    //total number of element in the list
+    required state count: Numeric
+    ///take n item form the view
+    required operation take_n(n: Numeric): Result<FixedView<Any>, Error>
+}
+
+proto Graph{
+    required state nodes#0: View<Node> + Only
+    required state edges#1: View<Edge> + Only
+}
+
+eq (s:Numeric, x:Numeric, t:Numeric){
+    let condition: x = y + z
+    z >= 0
+
+}
+
+proto Operation<F:Unknown, S:Unknown>{
+    enum StateKind<F:Unknown, S:Unknown>:Nominal{
+        Unknown:Nominal::Unknown;
+        Executing,
+        Failed(F),
+        Success(S)
+    }
+    state: Required + StateKind<F, S>
+    op execute(&self, session:Option<Session>)->Operation<(),()> {
+
+
+    }
+}
+
+translator<View<Byte>, Ast::Proto> BytesToProto {
+    state document: View<Byte>
+    state ast:
+
+    trasnlate(){
+        let x = self.document.take(self.ProtoIdentifier)
+        when(x.state==Failed){}
+        l self.document as Block
+        document.goto()
+
+    }
+    ProtoBlock{View<Byte> as Proto}
+    Block{View<Byte> as Block}
+    Block{View<Byte> as Enum}
+    Block{View<Byte> as Enum}
+
+
+}
+
+default impl Graph when Mutable{
+    operation add_node#0(node:Node):Result<(), Self:ErrorKind>{
+        return self.nodes.add(node)
+    }
+
+    operation add_edges#0(node:Node):Result<(), Self:ErrorKind>{
+        return self.nodes.add(node)
+    }
+
+
+    eq x = y + x
+    eq x => z
+    impl [] for operation
+
+}
+
+proto  Graph{
+    edges: Required + View<Edge> + Only
+    nodes: Required + View<Nodes> + Only
+}
+
+proto SmartEdge:Edge{
+    required enum RelationShip:Nominal{
+        Unknown: Nominal::Unknown;
+        OneToOne,
+        ManyToMany,
+        OneToMany,
+        ManyToOne
+    }
+
+    required state relationship: Relationship;
+    required state forward_reference;
+    required state backward_reference;
+
+    context<Concept>{
+        match state{
+
+        }
+
+    }
+
+}
+
+
+
+
+permission {
+
+
+}
+
+proto Bit#0;
+proto Byte#0;
+
+default impl Byte{
+    required state BitsPerByte: Numeric
+    required state Bits: View<Bites> + FixedAmount<BitsPerByte>
+}
+
+partial impl View<Bytes>{
+
+
+}
+
+impl View<UTF8> for Json{
+    state:
+}
+proto String: View<UTF8>;
+proto Numeric;
+
+proto Integer:Numeric
+proto UI64:Integer
+impl View<Byte> for UI64:Take{
+    value(&self, )->Result{
+        Take(8, )
+    }
+
+}
+
+proto Json{
+    proto Object{
+        final required state name: Only<String>;
+        final required state children: View<Value>
+    }
+
+    proto Value{
+        final required state value: Only + Some<String, Float64, Boolean, Object>;
+    }
+
+    graph X{
+        n
+
+    }
+}
+
+
+impl Json for Graph{
+    View<nodes>
+
+}
+
+graph byte{
+    edges {
+        relationship OneToTone
+        forward_reference next{
+            target bit,
+            next,
+
+        }
+        backward_reference back{
+            previous,
+            source bit
+       }
+    }
+}
+
+
+graph int4{
+    edges {
+        relationship OneToTone
+        forward_reference next{
+            target byte,
+            next,
+
+        }
+        backward_reference back{
+            previous,
+            source byte
+       }
+    }
+}
+transfor(byte, int4).View<Byte>.handle{
+    state: numeric
+    runs = 0
+    on_byte(){
+        state += numeric(byte)
+        if runs==3{
+            release(state).
+            then(runs = 0).clear(state)
+        }
+    }
+}
+
+
+graph json{
+    edges {
+        relationship OneToTone
+        forward_reference value{
+            target string:,
+            next,
+
+        }
+        backward_reference propery{
+            previous,
+            source byte
+       }
+    }
+}
+
+
+graph Json{
+    property field: String;
+    edge {
+        forward_reference value{
+            target:  String|Boolean|Float64|Json
+        }
+        backward_reference parent{
+           source: Json
+        }
+    }
+}
+
+protocol Json{
+    nodes {
+        Property,
+        String,
+        Boolean,
+        Float64}
+
+    edge {
+            fr value{
+                target:  *
+            }
+            br parent{
+               source: Property
+            }
+        }
+    }
+}
+
+abstract application Holo{
+
+protocol Container{
+    property border: Proto<Border>,
+    property dimension: Proto<Dimension>
+    //relative position to parent container
+    property layer: Proto<Layer>
+    property position: Proto<Position>
+    property children: Proto<View<Container>>
+    property layer: Proto<View<Container>>
+}
+
+context<Holo::Row>{
+    require Row::parent;
+    require
+    container(){
+        Row::parent
+    }
+    handle(Intention<Expand>) {
+
+
+    }
+
+}
+function Expand(c: Container, expansion_size:){
+    //get parent container
+    if c.parent().can_child_expand(c){
+        c.height =* 2
+    }
+
+}
+
+
+protocol Expand(c: Container, expansion_size: Expansion)->Operation;
+
+
+Context<Row>{
+    let r = @Row::Children->parent;
+    Expand(c: Container, expansion_size: Expansion)->Operation{
+        //check if there is an aspect
+    }
+}
+
+
+///expand a container
+trait Expand {
+    fn expand(&self) -> Result<Holo::Ok, Holo::Error>{
+        self.expand(self, ExpansionStrategy:Double)
+    }
+    fn expand(&self, expansion_size: ExpansionType) -> Result<Holo::Ok, Holo::Error>
+}
+
+
+default impl Expand for Holo::Container {
+
+    fn expand(&self)->Result<Ok, Error>{
+       //due that there is not much more information instead of expand show the container
+       self.ux.show(self)
+    }
+
+    context<self.parent impl Row>{
+        fn expand(&self, expansion_size: Expansion)->Result<Ok, Error>{
+            self.parent.
+        }
+    }
+
+    context<r: Self:Parent:Row, R::ewe:IMplsdsd>{
+        fn expand(&mut self, expansion_size: Expansion)->Result<Ok, Error>{
+                self.parent().s
+            }
+     }
+}
+
+
+proto Container{
+    proto dimension(&self): Dimension
+    default impl Dimension for self.dimension{
+
+    }
+
+    operation
+
+}
+
+///when the parent container will resize to a new value
+default impl Resize for Holo::Row{
+    fn resize(&self, new_height:Height, new_witfd:Wifgt)->Result<Ok, Error>{
+        //get the change in sizes
+       self.remove_children()
+    }
+
+}
+
+
+
+impl Expand when  {Self::parent impl Holo::Row} {
+
+    fn expand(&mut self, expansion_size: Expansion)->Result<Ok, Error>{
+        self.parent
+       //due that there is not much more information instead of expand show the container
+       self.ux.show(self)
+    }
+}
+
+
+
+impl <s:Row-<Self>context<s: Row@-<self>
+    op expand(&self, expansion_size: Expansion)->Operation{
+
+    }
+}
+
+context Epand
+@onclick Expand
+
+
+context<Container>{
+    impl Stack{
+        parent: Container;
+        children: List<Container>,
+        max_item: Numeric//max item supported by this list
+        max_container;
+        operation add_container(c:Container){
+            children.add(c)
+        }
+        operation add_container(c:Container){
+                    children.add(c)
+        }
+    }
+}
+//this will translate any protocol to an stack
+translators View>{
+    pol,
+    pd,
+    da,
+}
+
+stack(asd) {
+    view<Files>
+}
+
+
+protocol UI{
+    tree UIHierarchy{
+        source Container
+        target Container
+    }
+    extends Container{
+
+        impl children = self@UIHierarchy->children
+    }
+
+    operation add_container(c:Container, parent:Container){
+        if (self.UIHierarchy::add_node(c)){
+            //add edge
+
+        }
+    }
+}
+
+
+}
+
+
+
+P@Json->value
+    graph Root #0{
+            nodes{
+                resource,
+                properties
+            }
+            edge<OneToMany>{
+                forward_reference resource{
+                    plural resource,
+                    source resource,
+                }
+            }
+
+        }
+
+proto Protocol#0:Template;
+
+default impl  Protocol {
+    ///state
+    required state properties#0: View<Property+State> + Mutable;
+    ///protocol operations
+    required state operations#1: View<Operations> + Mutable;
+    ///protocol declared inside a protocol
+    required state children_protocols#2: View<Protocol> + Mutable;
+    ///Metadata
+    required state meta: Only + Meta + Mutable;
+
+     required operation
+
+}
+impl Json for Fda{
+    {@, df}
+
+}
+impl HoloComponent for DSDs{
+    @
+    <row>
+
+    </row>
+
+
+}
+
+context<Concept> CompilerConcepts#0{
+
+    define Enumeration {
+        resource(kind: EnumerationItem)
+        item#0;
+    }
+
+    context<Nominal>{
+        define Enumeration{
+            property(kind: Nominal::Unknown, required)
+            unknown#0;
+        }
+    }
+
+    context<Nominal, Ordinal>{
+         define Enumeration{
+            @resource(protocol: EnumerationItem)
+            item#0{
+                @validation
+                next_value#0(): EnumerationItem
+                    self@LinkedList->next.value >= self.value
+                }
+            }
+
+            linked_list! item
+            graph LinkedList#0:
+     }
+
+
+
+    protocol<Nominal, Ordinal, Radial>{derive: {Enumeration<Nominal, Ordinal>}} Enumeration {
+        final
+        property{kind: Zero, required: True} zero#0;
+    }
+
+    protocol<Nominal, Flag>{derive: Enumeration} Enumeration{
+        resource{Kind: Incompatible, plural: incompatibles} incompatible#0;
+
+    }
+
+    protocol<Only<Meta>, Graph, Property, Operation, Computation, Resource, Handlers> Protocol {
+        ///root graph that contains all the resources and properties
+        ///this represents all the properties of the resource
+        resource {
+            ///declare a plural walker for the graph
+            plural: properties,
+            kind: Property
+        } property#1;
+
+        ///this represents all the resources declared in the protocol
+        resource {
+            plural: resources,
+            kind: Resource,
+        } resource#2;
+
+
+        graph Root #0{
+            nodes{
+                resource,
+                properties
+            }
+            edge<OneToMany>{
+                forward_reference resource{
+                    plural resource,
+                    source resource,
+                }
+            }
+
+        }
+
+        context<Concept>{
+            //
+            protocol AddResource {
+               property<Plural> plural#0;
+            }
+            operation property(node: Property): Node{
+                self@Root::add_edge(property, source:self,  target:node)
+            }
+            operation resource(node: Resource): Node{
+                self@Root{
+                    edge{
+                        resource,
+                        source:self,
+                          target:node}
+                }
+            }
+            operation properties(nodes: View<Property>): Node{
+                self@Root::add_edges(properties, nodes)
+            }
+            operation resources(nodes: View<Resource>): Node{
+                self@Root::add_edges(resources, nodes)
+            }
+        }
+
+        context<Runtime>{
+            //generate add, delete and update operations
+            operation property(node: Property): Node{
+                self@Root::add_edge(property, source:self,  target:node)
+            }
+            operation resource(node: Resource): Node{
+                self@Root{
+                    edge{
+                        resource,
+                        source:self,
+                          target:node}
+                }
+            }
+            operation properties(nodes: View<Property>): Node{
+                self@Root::add_edges(properties, nodes)
+            }
+            operation resources(nodes: View<Resource>): Node{
+                self@Root::add_edges(resources, nodes)
+            }
+        }
+
+
+        ///Metadata
+        lets meta = ::property(#0);
+
+
+        ///this represents all the graphs
+        resource<Graph>{
+            plural graphs#0;
+        } graph#2;
+
+        ///represents the operations that can mutate the state of protocol,
+        //those operation are only available in the under the {SameNode} protocol
+        resource<Operation>{
+            plural operations#1;
+        } operation#3;
+
+        ///represents the computation that use the protocol state those are only available in the SameNode protocol
+        resource<Computation> {
+            plural computations#0;
+        } computation#4;
+
+        alias {
+            target operation,
+            plural ops#1,
+        }op #0;
+
+        alias {
+            target computation,
+            plural fns#0,
+        }fn#5;
+    }
+
+
+    protocol<Only<Meta>, Symbol> Block{
+        ///metadata
+        property<Only<Meta>> meta#0;
+
+        ///all the symbols in the block
+        resource{
+            plural symbols#0;
+        } symbol#1: Symbol;
+
+        tree!{
+            source {optional True#0} symbol#0;
+            target {optional True#0} symbol#1;
+        } graph Alias#2: Extends<Graph> {
+            ///new alias can only implements symbol
+            op add_alias(new_alias: Only<Symbol>, existing_alias: Symbol): Operation{
+                self::add_edge(child, Only<Symbol>, new_alias)
+            }
+        };
+
+        macro! alias!(new_alias: Only<Symbol>, arguments: new_proto!{property target#0: Symbol, property plural#1: Only<Symbol>}): Symbol{
+            Self::add_alias(new_alias,  arguments.target);
+            if(arguments.target.plural ){
+                Self::add_alias(arguments.plural, arguments.target.plural);
+            } else{
+
+            }
+            return source
+        }
+    }
+
+    ///combine protocol + block and add some behaviours, you can access to this protocol with Protocol+Block, Protocol<Block> or Block<Protocol>
+    ///two protocol can only be combined if each has derived the SameNode protocol
+    protocol<Protocol> Block {
+
+
+    }
+
+}
+startdelete
+
+multiples  1
+1
+2
+3
+4
+5
+6
+start insert
+

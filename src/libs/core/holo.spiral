@@ -1,0 +1,136 @@
+
+type Dimension2D#0{
+    validator height>5 [5, inf]
+    height#0: f64 + State + Required
+    width#1: f64
+
+    validate width>5   [-inf, 5]
+    validate width + height <1
+}
+
+proto Position2D#0{
+    required state x#0: Numeric + State + Required
+    required state y#1: Numeric + State + Required
+}
+
+default impl Dimension2D {
+    pub fn new(&mut self, height#0:Numeric, width#1:Numeric)->Result<(), Error>{
+          Dimension2D{
+             height, width
+           }
+          Ok()
+    }
+   op resize(&mut self, height#0:Numeric, width#1:Numeric)->Result<(), Error>{
+      self.height=height;
+      self.width=width;
+      Ok()
+      self.dimension.set{Default}
+    }
+}
+default impl Row{
+
+
+    container{
+       if self.prevous
+        y =  self.previous.y + self.prevoius.height
+
+    }
+    containers(){
+
+    }
+
+
+
+}
+proto Parent>{
+    fn parent(&self):Self
+}
+
+proto Mutable#{
+    enum ErrorKind:Nominal{
+        Unknown: Nominal::Unknown,
+        Fail
+    };
+    required operation set: Result<(), Self::ErrorKind>
+}
+default impl Mutable for Any{
+    context<Compiler::Impl, Compiler:Block>{
+        set(&self, symbol)->Any{
+           self->add_operaset(&self)
+        }
+    }
+}
+proto Container{
+    dimension#1: Dimension2D+Mutable+Required+State;
+    required state position#2: Position2D+Mutable;
+    ///allow access to the parent
+    required state parent#3: Self;
+}
+
+proto Row#0{
+    required enum ErrorKind:Nominal#0{
+        Unknown:Nominal.Unknown,
+        Fail
+    }
+    required state children#1: View<Container> + Last
+}
+
+tree!(required=True)
+DOM#1 {source: Container, destination: Container}
+
+
+default partial impl Parent for Container{
+    context<DOM>{
+        fn parent(&self):Container{
+            self@Dom<-parent;
+        }
+    }
+}
+
+context<@DOM, @DOM->child:Position>{
+    impl Last for @DOM->children{
+        fn last(node: @DOM<-parent.source): Result<@DOM->child.target, Error>{
+            View::from_walk(Walk::sort_by_edge(node, @DOM->child->{*}, child.position)).last()
+        }
+    }
+}
+
+default impl Row:Container{
+    context<DOM, @DOM->children:Last>{
+        state children: self@DOM->children;
+        operation add_children(&self, c: Container)->Result<(), Self::ErrorKind>{
+            let last_container = self.children.last();
+            c.position::set(last_container{position.x + dimension.width},  last_container{position.y + dimension.height})
+            self@DOM::add_node(c, self)
+        }
+    }
+}
+
+default impl Row:Container{
+    context<self:DOM, @DOM{edge->child:Position}>{
+        state children: self@DOM->children;
+        operation add_children(&self, c: Container){
+            last_container = View::from_walk(Walk::sort_by_edge(self, @DOM->child, child.position)).last();
+
+            c.position.set(last_container{position.x + dimension.width},  last_container{position.y + dimension.height})
+            self@DOM.add_node(c, self)
+        }
+    }
+}
+
+
+default impl Row{
+   op add_widget(&mut self, w:Widget)->Result<Ok,Error>{
+        self.
+        self.children.push(w)
+
+   }
+
+
+}
+
+proto Text:Container{
+    fn content(&self): String;
+    fn set_content(mut &self, Content:String)->Result<Ok, Error>;
+}
+

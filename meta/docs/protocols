@@ -1,0 +1,76 @@
+# Builtin Data Types
+
+## Scalar Types
+
+all the types are implemented using monads
+
+`Numeric`: represent any number all the numeric types implements Radial
+
+`Numeric`: represent any number all the numeric types implements Radial
+
+`Integers`: represent numeric types that only accept integers
+
+`Float`: represent numeric types that accepts floats
+
+`Positive`: positive values
+
+`NonZero`: represent numeric types that does not allow Radial:Zero
+
+`Negative`: negatives values
+
+`Sized<Value>`: sized variable
+
+```
+proto UnsignedInteger8<SizeInBytes>: Integers + Positive + Sized<SizeInBytes> + Value<View<Bytes> + Incompatible<Float> + BlockInContext<Conceptual>
+proto Integer8<SizeInBytes>: Integers + Positive + Negative + Sized<SizeInBytes> + Value<View<Bytes> + Incompatible<Float> + BlockInContext<Conceptual>
+etc
+```
+
+
+unsigned integers: u8, u16, u32, u64 and usize (pointer size)
+floating point: f32, f64
+char Unicode scalar values like 'a', 'α' and '∞' (4 bytes each)
+bool either true or false
+and the unit type (), whose only possible value is an empty tuple: ()
+Despite the value of a unit type being a tuple, it is not considered a compound type because it does not contain multiple values.
+
+proto Numeric#1;
+proto Integer#1: Numeric;
+proto Bit#2;
+proto Stability#1{
+    proto Unstable,
+    proto Alpha,
+    proto Beta,
+    proto Stable,
+}
+
+
+final immutable impl Bit: Stability::Unstable{
+    enum BitState#0{
+        One,
+        Zero
+    }
+    member value#1: BitState
+}
+
+default impl Byte: Default<Value> + Stability::Unstable{
+    required member octet: integer + Constant
+    required member content: Sized<octet> + View<Bit> + Only
+}
+
+
+default impl Numeric: Stability::Unstable{
+    required constructor#0(input#0: View<Bytes>)->Operation<Self, Self::Error>
+    required op add#1(&self, other#1:Self)->Operation<Self, Self::Error>
+}
+
+
+//impl numeric when there i
+impl Numeric when Radial{
+
+}
+default impl Integer{
+    default constructor#0(input#0: View<Bytes>)->Self{
+        return  View<Bytes> as Integer
+    }
+}

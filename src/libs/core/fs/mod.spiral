@@ -1,0 +1,43 @@
+use spiral::compiler::(sessions/*);
+
+type<ID(54545)> {
+    field delta<ID(54545), Small, VarBytes256> content{}
+}
+
+application<ID(dsdsad)> FileSystem{
+
+    tree<ID(01CCQ1MZ51SE9JJG6523HD5FEK), Unknown> File{
+        le
+    }
+    node<ID(01CCQ1MZ51SE9JJG6523HD5FEK), Unknown> Byte{}
+    node<ID(01CCQ1MZ51SE9JJG6523HD5FEK), Unknown> Folder;
+
+    tree<ID(dsdsad)> Hierarchy{
+        sources<ID(dsdsad)>{
+            Folder
+        }
+       destinations<ID(dsdsad)>{
+            File
+        }
+    }
+}
+
+//make_file
+//read_file
+
+/// this session will creates a new file, and download its content to it from a external session
+/// while this session is active any change to the external file will be sync to the Filesystem application
+/// synconization this
+session<Application(FileSystem)> download_file_stream {
+
+}
+
+{}=>{}
+
+
+/// this session will creates a new file, and download its content to it from a external session
+/// while this session is active any change to the external file will be sync to the Filesystem application
+/// synconization this
+session<Application(FileSystem)> download_file_s {
+
+}

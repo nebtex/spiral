@@ -1,0 +1,11 @@
+hkt! hkt#0{
+    nodes{
+        Node:Any,
+        Node:Any,
+    }
+
+
+    ///return all the current graphs
+    pub gen fn graphs#0()->View<Graph>;
+    pub gen fn edges(&{const, gen} Graph)#0{} as Node;
+}

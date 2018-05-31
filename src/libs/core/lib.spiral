@@ -1,0 +1,220 @@
+#?
+/// implements minimal concepts needed for bootstrap the compiler
+/// initially only the add and the concept automata are available
+
+add#0 concept impl unknown success{
+  
+
+
+}
+
+
+let resource impl concept{
+    let global_id implements concept#?
+}#?
+
+let#0 graph impl concept
+let#1 graph impl resource
+let#2 type impl concept
+let#3 type impl graph
+let#4 enum impl type
+let#5 nominal impl type
+let#6 numeric impl type
+let#7 ordinal impl numeric
+let#8 radial impl numeric
+let#9 zero impl radial
+let#10 edge impl concept
+let#11 node impl concept
+let#12 ordinal impl numeric
+let#13 plural impl concept
+let#14 required impl concept
+enum impl nominal#?
+
+pub actor NumericValue#0;
+
+ethereal Json#0{
+    final const root#0:Property = {name: "root"#0};
+
+    final enum Value#1{
+        Unknown#0:Nominal::Unknown,
+        String(String)#1,
+        Number(F64)#2,
+        Boolean(Bool)#3,
+        Null#4,
+    }
+
+    final graph<Acyclic, Directed> JsonTree#2{
+        edge #0{
+            relationship: OneToMany,
+            forward_reference child_property#0{
+                plural child_properties#0,
+                target Property;
+            }
+
+            backward_reference parent_property#0{
+                target Property,
+                required True,
+                default root,
+            }
+        }
+        edge #1{
+            relationship: OneToOne,
+            forward_reference value#0{
+                target Value;
+            }
+            backward_reference parent_property#0{
+                target Property,
+                required True,
+                default root,
+            }
+        }
+
+        extend Property{
+            val only{}
+
+        }
+    }
+
+    final struct Property{required name: String}
+    final struct Value{value: JsonValue}
+
+    final cp stream()->View<Property|Value>{
+        root@JsonTree::transverse(algorithm=DepthFirstSearch, edges={value, child_property}, include_edges=false)
+    }
+}
+
+trait Mutable{
+    error ErrorKind{
+        Unknown:Nominal.Unknown,
+        Fail,
+        InvalidArgument,
+    }
+
+
+    default op set<v:Value>(&mut self, args: View<args>)->Result<(), Self::ErrorKind>{
+        stages {validation#0};
+        default validation {
+            task individual_validation#0{
+                for arg in Self::args.filter(impl=Validation){
+                    let result = arg.validate()
+                    match result{
+                        Errr
+
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+pub actor Property<Value:Mutable, Version:Mutable, ID>{
+    id#0: ID,
+    value#1: V,
+    version#2: Version,
+}#0;
+
+
+default impl Property<Value, Version, ID> when Mutable {
+    extends op set<VAL: Numeric>#0(&mut self, value, version)->Result<(), Mutable::ErrorKind>{
+         stages {
+            validation#0,
+            modify#1{
+                require validation
+            }
+         }
+         extends validation {
+            for arg in Self::args.filter(impl=Validation){
+                     arg.validate()
+            }
+         }
+         let key=Self::get_key(final value)
+        self.set{
+
+        }
+
+    }
+
+
+    cp ()
+    default op set_default#0(&mut self, args: Self::set::args.exclude(symbol=value))->Self::set{
+
+    }
+
+    default op delta#1<N:Numeric>(&mut self, change#0:N, args: Self::set::args.exclude(symbol=value))->Self::set{
+        self.set(value=self.value+delta, args)
+    }
+}
+
+
+
+
+
+
+
+///This actor allow to set or access to numeric values
+pub actor NumericValue<kind, default:Default>{
+    pub default: default;
+    version()->numeric;
+    cp diameter()->Float{
+
+    }
+}
+
+
+
+
+
+graph impl type{
+    let node impl graph impl node#0
+    let edge impl graph impl edge#?
+    {
+        ///make node and edge two complete different concepts
+        extends edge not_impl node#?;
+        extends node not_impl edge#?;
+    }#1
+
+    let enum impl graph impl enum#?{
+        node Unknown impl required;
+    }
+
+    extend(after(#1)) edge impl {
+        let relationship impl enum{
+            Unknown Unknown;
+            OneToMany#?
+            ManyToOne#?
+            ManyToMany#?
+            OneToOne#?
+        }#?
+        let backward_reference impl graph{
+            match relationship{
+                or(OneToMany, ManyToMany)
+                {
+                  let plural impl required impl plural
+                }#?;
+            }#?
+            let source impl array node impl required{
+                plural sources
+            }#?
+        }#?
+        let forward_reference impl graph#?{
+           match relationship{
+               some(ManyToOne, ManyToMany) extend plural impl required#?;
+           }#?
+           let target impl array node impl required{
+               plural targets
+           }#?
+        }
+    }#?
+
+    extend node impl {
+        let property impl graph;
+
+    }#?
+
+    
+}#?
+
+
+
+

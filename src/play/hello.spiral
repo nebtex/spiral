@@ -1,0 +1,24 @@
+bin package #'src'{
+    pub record Duration#0(#0:u64, #1:u64);
+    gen fn main#0(){
+        println("hello world")
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

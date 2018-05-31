@@ -1,0 +1,69 @@
+///this module define some default behaviors for graphs
+#01CDDVQ5GY3YJ3P8910QTRQWX2;
+
+context<Concept+Template>#0{
+    // graphs protocol, this is how the compiler thing, if you understand them you can make amazing things
+    protocols{
+        Graph #0: Derive<CRUD>{
+            ///Metadata
+            property<Only<Meta>> meta#0;
+
+            resource<Node>{
+                plural nodes#0;
+            } node#1;
+
+            resource<Edge>{
+                plural edges#0;
+            } edge#2;
+        }
+
+        ///this protocol allow cycles in the graph
+        Graph + Cyclic + Undirected #1;
+
+        ///this protocol does not allow cycles
+        Graph + Acyclic + Directed #2{
+             ::Concept@Graph{
+                incompatible Graph + Cyclic + Undirected;
+             }
+             ops<Context+Any>{
+                add_edge#0(edge_kind: Resource<Edge>, source: Resource<Node>, destination: Existing<Resource<Node>>): AddAutomata + Edge{
+                    //check if there are cycles first before add a edge
+                    if(source::Protocol.has_protocol(Existing)){
+                        if(self@Root::find_forward_walk(source, *, destination) || self@Root::find_backward_walk(source, *, destination)){
+                            return error GraphHasCycles #0)
+                        }
+                    }
+
+                    return self@Root::add_edge(edge_kind, source, destination)#2
+                }
+             }
+        }
+
+        Tree + Graph + Acyclic + Directed #3{
+            ops<Context+Concept>{
+                 add#0(sources: View<Resources<Node>>, targets: View<Resource<Node>>): ADD+Self{
+                    nodes <= Translate(Search<Translator>) <= Intercept<View>{views {sources, targets}#0}#0;
+                     edge #1{
+                        forward_reference child {
+                            plural children#0;
+                            sources source;
+                        }
+                        backward_reference parent#0{
+                            targets targets;
+                        }
+                   }
+               }
+        }
+    }
+  }
+
+  alias Graph<Acyclic, Directed>#3 {target Graph + Acyclic + Directed}
+  alias Tree#3 {target Tree + Graph + Acyclic + Directed}
+}
+
+
+actor resource{
+    id
+    application
+
+}

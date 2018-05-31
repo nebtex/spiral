@@ -1,0 +1,5 @@
+/// base type for every other spiral type
+/// by default everything is unknown
+type<ID(54545)> Unknown{}
+
+type<ID(54545)> Unknown{}
